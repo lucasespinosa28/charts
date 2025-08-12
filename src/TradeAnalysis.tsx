@@ -2,13 +2,6 @@
 import { useMemo } from 'react';
 import myTrades from './trades_output';
 
-interface MyTrade {
-  assetId: string;
-  price: number;
-  timeStamp: string;
-  outcome: string;
-}
-
 interface TradeAnalysisData {
   assetId: string;
   tradePrice: number;
@@ -33,14 +26,16 @@ interface Props {
       color?: [number, number, number];
     }>;
   }>;
+  targetPrice: number;
 }
 
-export default function TradeAnalysis({ charts }: Props) {
+export default function TradeAnalysis({ charts, targetPrice }: Props) {
+  const priceLabel = `$${targetPrice.toFixed(2)}`;
   const analysisData = useMemo(() => {
     const results: TradeAnalysisData[] = [];
 
-    // Filter trades to only include $0.95 trades
-    const filteredTrades = myTrades.filter(trade => trade.price === 0.95);
+    // Filter trades to only include trades at the target price
+    const filteredTrades = myTrades.filter(trade => trade.price === targetPrice);
 
     filteredTrades.forEach(trade => {
       // Convert timeStamp string to number
@@ -113,7 +108,7 @@ export default function TradeAnalysis({ charts }: Props) {
     });
 
     return results.sort((a, b) => b.tradeTimestamp - a.tradeTimestamp); // Most recent first
-  }, [charts]);
+  }, [charts, targetPrice]);
 
   const overallStats = useMemo(() => {
     if (analysisData.length === 0) return { averageSavings: 0, totalTrades: 0 };
@@ -147,10 +142,10 @@ export default function TradeAnalysis({ charts }: Props) {
         marginBottom: '20px'
       }}>
         <h3 style={{ color: '#f1f5f9', margin: '0 0 10px 0', fontSize: '16px' }}>
-          Trade Analysis - $0.95 Trades (Realistic Prices ≥ $0.10)
+          Trade Analysis - {priceLabel} Trades (Realistic Prices ≥ $0.10)
         </h3>
         <p style={{ color: '#94a3b8', margin: 0 }}>
-          No trades at $0.95 found with matching market data.
+          No trades at {priceLabel} found with matching market data.
         </p>
       </div>
     );
@@ -172,7 +167,7 @@ export default function TradeAnalysis({ charts }: Props) {
         marginBottom: '20px'
       }}>
         <h3 style={{ color: '#f1f5f9', margin: 0, fontSize: '18px', fontWeight: 600 }}>
-          Trade Analysis - $0.95 Trades (Realistic Prices ≥ $0.10)
+          Trade Analysis - {priceLabel} Trades (Realistic Prices ≥ $0.10)
         </h3>
         <div style={{ 
           display: 'flex', 
