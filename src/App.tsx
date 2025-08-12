@@ -3,7 +3,6 @@ import GpuScatterGrid, { type ChartData } from "./GpuScatterGrid";
 import SizeHeatmap from "./SizeHeatmap";
 import PriceFilteredSizeHeatmap from "./PriceFilteredSizeHeatmap";
 import TradeAnalysis from "./TradeAnalysis";
-import TradeAnalysis90 from "./TradeAnalysis90";
 import markets from "./markets";
 import type { Market } from "./markets";
 import myTrades from "./trades_output";
@@ -114,11 +113,11 @@ export default function App() {
           overflow: "auto", // Allow scrolling if content is too tall
           minWidth: 0 // Allow flex item to shrink below content size
         }}>
-          {/* Trade Analysis at the top */}
-          <TradeAnalysis charts={extendedCharts} />
-          
+          {/* Trade Analysis for $0.95 trades */}
+          <TradeAnalysis charts={extendedCharts} targetPrice={0.95} />
+
           {/* Trade Analysis for $0.90 trades */}
-          <TradeAnalysis90 charts={extendedCharts} />
+          <TradeAnalysis charts={extendedCharts} targetPrice={0.90} />
           
           {/* Individual charts */}
           <div style={{ 
